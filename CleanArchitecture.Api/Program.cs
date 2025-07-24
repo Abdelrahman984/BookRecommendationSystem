@@ -92,11 +92,11 @@ namespace CleanArchitecture.Api
             ImageHelper.Configure(accessor, env);
 
             // Middleware
-            if (app.Environment.IsDevelopment())
-            {
+            // if (app.Environment.IsDevelopment())
+            // {
                 app.UseSwagger();
                 app.UseSwaggerUI();
-            }
+            // }
 
             app.UseStaticFiles();
             app.UseCors("AllowAll");
