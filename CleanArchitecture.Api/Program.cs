@@ -63,12 +63,16 @@ namespace CleanArchitecture.Api
             #endregion
 
             #region Email
-            var Configure = builder.Configuration;
-            var emailconfig = Configure.GetSection("EmailConfiguration").Get<EmailConfiguration>();
-            builder.Services.AddSingleton(emailconfig);
+            //var Configure = builder.Configuration;
+            //var emailconfig = Configure.GetSection("EmailConfiguration").Get<EmailConfiguration>();
+            //builder.Services.AddSingleton(emailconfig);
+            //builder.Services.AddScoped<IEmailService, EmailService>();
+            //builder.Services.Configure<IdentityOptions>(opts => opts.SignIn.RequireConfirmedEmail = true);
+
+            builder.Services.Configure<EmailConfiguration>(builder.Configuration.GetSection("EmailConfiguration"));
             builder.Services.AddScoped<IEmailService, EmailService>();
-            builder.Services.Configure<IdentityOptions>(opts => opts.SignIn.RequireConfirmedEmail = true);
             #endregion
+
 
             builder.Services.AddAuthorization();
 
@@ -84,6 +88,9 @@ namespace CleanArchitecture.Api
             builder.Services.AddScoped<IDataSeedingService, DataSeedingService>();
             builder.Services.AddScoped<IBookService, BookService>();
             builder.Services.AddAutoMapper(cfg => cfg.AddProfile<MappingProfile>());
+
+            builder.WebHost.UseUrls("http://0.0.0.0:80");
+
             var app = builder.Build();
 
             // Redis ImageHelper Config
@@ -94,8 +101,8 @@ namespace CleanArchitecture.Api
             // Middleware
             // if (app.Environment.IsDevelopment())
             // {
-                app.UseSwagger();
-                app.UseSwaggerUI();
+            app.UseSwagger();
+            app.UseSwaggerUI();
             // }
 
             app.UseStaticFiles();
