@@ -69,8 +69,24 @@ namespace CleanArchitecture.Api
             //builder.Services.AddScoped<IEmailService, EmailService>();
             //builder.Services.Configure<IdentityOptions>(opts => opts.SignIn.RequireConfirmedEmail = true);
 
-            builder.Services.Configure<EmailConfiguration>(builder.Configuration.GetSection("EmailConfiguration"));
+            //builder.Services.Configure<EmailConfiguration>(builder.Configuration.GetSection("EmailConfiguration"));
+
+            //var emailConfig = builder.Configuration
+            //    .GetSection("EmailConfiguration")
+            //    .Get<EmailConfiguration>();
+
+            //builder.Services.AddSingleton(emailConfig);
+
             builder.Services.AddScoped<IEmailService, EmailService>();
+
+            var emailConfigSection = builder.Configuration.GetSection("EmailConfiguration");
+            if (!emailConfigSection.Exists())
+            {
+                throw new InvalidOperationException("EmailConfiguration section is missing in appsettings.json");
+            }
+            var emailConfig = emailConfigSection.Get<EmailConfiguration>();
+            builder.Services.AddSingleton(emailConfig!);
+
             #endregion
 
 
@@ -89,7 +105,6 @@ namespace CleanArchitecture.Api
             builder.Services.AddScoped<IBookService, BookService>();
             builder.Services.AddAutoMapper(cfg => cfg.AddProfile<MappingProfile>());
 
-            builder.WebHost.UseUrls("http://0.0.0.0:80");
 
             var app = builder.Build();
 
