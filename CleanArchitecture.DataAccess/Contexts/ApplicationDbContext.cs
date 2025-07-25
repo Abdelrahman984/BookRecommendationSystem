@@ -20,6 +20,17 @@ namespace CleanArchitecture.DataAccess.Contexts
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+            // حل مشكلة nvarchar(max)
+            foreach (var entity in builder.Model.GetEntityTypes())
+            {
+                var properties = entity.GetProperties()
+                    .Where(p => p.ClrType == typeof(string) && p.GetMaxLength() == null);
+
+                foreach (var property in properties)
+                {
+                    property.SetMaxLength(255); // أو أي حجم مناسب حسب حالتك
+                }
+            }
             SeedRoles(builder);
         }
         private static void SeedRoles(ModelBuilder builder)

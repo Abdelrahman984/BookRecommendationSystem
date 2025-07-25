@@ -16,9 +16,17 @@ namespace CleanArchitecture.DataAccess
         {
 
             //For Entity FrameWork
+            //services.AddDbContext<ApplicationDbContext>(options =>
+            //options.UseSqlServer(config.GetConnectionString("Cs")),
+            //ServiceLifetime.Scoped);
+
             services.AddDbContext<ApplicationDbContext>(options =>
-            options.UseSqlServer(config.GetConnectionString("Cs")),
+            options.UseMySql(
+                config.GetConnectionString("Cs"),
+                ServerVersion.AutoDetect(config.GetConnectionString("Cs"))
+            ),
             ServiceLifetime.Scoped);
+
 
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             services.AddScoped<IUnitOfWork, UnitOfWork>();
